@@ -10,16 +10,15 @@ class Play extends Phaser.Scene {
 
     create() {
         //create game objects
-        this.player = new Player(this, game.config.width / 2, game.config.height /2, 'player').setOrigin(0.5, 0.5);
+        this.player = new Player(this, 100, 100, 'player').setOrigin(.5, 0);
 
-        //set inputs
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        // Use Phaser-provided cursor key creation function
+        cursors = this.input.keyboard.createCursorKeys();
+
     }
 
     update() {
-        this.player.update();
+        this.player.update(cursors);
     }
+    
 }
