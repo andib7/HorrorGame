@@ -7,6 +7,7 @@ class Play extends Phaser.Scene {
         // load images/tile sprites
         this.load.image('player', './assets/sprites/Crab.png');
         this.load.image('object1', './assets/sprites/sheep.png');
+        this.load.image('background', './assets/background/background.png');
     }
 
     create() {
@@ -24,9 +25,8 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
         
-        
-
         //create game objects
+        this.background = this.add.image(game.config.width / 2, game.config.height / 2, 'background')
         this.player = new Player(this, 100, 100, 'player').setOrigin(.5, 0);
         this.object1 = new Interactable(this, 200, 200, 'object1', 0, "vase").setOrigin(.5, 0);
 
