@@ -7,7 +7,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(cursors) {
-        if (cursors.left.isDown) {
+        if (cursors.left.isDown) { 
             this.body.setVelocity(-this.VELOCITY, 0);
         } else if (cursors.right.isDown) {
             this.body.setVelocity(this.VELOCITY, 0);
@@ -20,4 +20,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.body.setVelocity(0, 0);
         }
     }
+
+    
 }
