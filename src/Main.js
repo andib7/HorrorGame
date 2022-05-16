@@ -4,8 +4,8 @@ let cursors;
 
 let config = {
     type: Phaser.WEBGL,
-    width: 640,
-    height: 480,
+    width: 1280,
+    height: 960,
     physics:{
         default: 'arcade',
         arcade: {
@@ -17,7 +17,7 @@ let config = {
         }
     },
     scene: [Play,Menu]
-};
+}
 
 let game = new Phaser.Game(config);
 
