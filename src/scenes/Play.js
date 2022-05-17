@@ -150,7 +150,7 @@ class Play extends Phaser.Scene {
         });
         
         //create game objects
-        this.background = this.add.image(game.config.width / 2, game.config.height / 2, 'background')
+        this.background = this.add.image(game.config.width / 2, game.config.height / 2, 'background');
 
         this.player = new Player(this, game.config.width / 2, game.config.height / 2, 'playerAtlas').setOrigin(.5, 0); 
 
@@ -165,12 +165,11 @@ class Play extends Phaser.Scene {
         this.net = new Collectable(this, 600, 900, 'net').setScale(.1);
         this.key = new Collectable(this, 700, 900, 'key').setScale(.1);
 
-        // Use Phaser-provided cursor key creation function
-        cursors = this.input.keyboard.createCursorKeys();
-
         var self = this; //for some reason this is the only way I can actually display text
         var currentText = self.add.text(50, 50, "NULL text");
         currentText.setVisible(false);
+        // Use Phaser-provided cursor key creation function
+        cursors = this.input.keyboard.createCursorKeys();
         
         //collider for interactable objects
         this.physics.add.collider(
@@ -186,6 +185,7 @@ class Play extends Phaser.Scene {
                     } else if(this.userInp == "y"){
                         currentText.setVisible(false);
                         currentText = self.add.text(50, 50, "You look through the books and find a metal file");
+                        self.sound.play('sfx_pickup');
                         self.metalFile.getItem();
                     }
                 }
@@ -203,6 +203,7 @@ class Play extends Phaser.Scene {
                     } else if (this.userInp == "y") {
                         currentText.setVisible(false);
                         currentText = self.add.text(50, 50, "You look through the drawer and find a net");
+                        self.sound.play('sfx_pickup');
                         self.net.getItem();
                     }
                 }
@@ -220,6 +221,7 @@ class Play extends Phaser.Scene {
                     } else if (this.userInp == "y" && self.metalFile.found == true) {
                         currentText.setVisible(false);
                         currentText = self.add.text(50, 50, "You use the metal file to saw off a metal bar from the bed");
+                        self.sound.play('sfx_pickup');
                         self.metalBar.getItem();
                     }
                 }
@@ -248,6 +250,7 @@ class Play extends Phaser.Scene {
                     } else if (this.userInp == "y" && self.net.found == true && self.trapdoorOpen == true) {
                         currentText.setVisible(false);
                         currentText = self.add.text(50, 50, "You use the net in the trap door and find a rusted key");
+                        self.sound.play('sfx_pickup');
                         self.key.getItem();
                     } else if (this.userInp == "y" && self.net.found == false && self.trapdoorOpen == true) {
                         currentText.setVisible(false);
