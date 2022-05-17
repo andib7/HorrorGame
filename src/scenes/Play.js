@@ -5,9 +5,10 @@ class Play extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('player', './assets/sprites/Crab.png');
-        this.load.image('object1', './assets/sprites/sheep.png');
         this.load.image('background', './assets/background/background.png');
+        this.load.atlas('playerAtlas', './assets/sprites/120_textureatlas.png', './assets/sprites/120map.json');
+        this.load.image('metalFile', './assets/sprites/metalfile.jpg');
+        this.load.image('metalBar', './assets/sprites/metalbar.jpg')
     }
 
     create() {
@@ -24,11 +25,125 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
+
+        // Set up animations
+        // Idle left
+        this.anims.create({
+            key: 'idle_left',
+            frames: this.anims.generateFrameNames('playerAtlas', {
+                prefix: 'idle_left_',
+                start: 1,
+                end: 3,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 5,
+            repeat: -1,
+            repeatDelay: 2500,
+            yoyo: true
+        });
+        // Idle right
+        this.anims.create({
+            key: 'idle_right',
+            frames: this.anims.generateFrameNames('playerAtlas', {
+                prefix: 'idle_right_',
+                start: 1,
+                end: 3,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 5,
+            repeat: -1,
+            repeatDelay: 2500,
+            yoyo: true
+        });
+        // Idle down
+        this.anims.create({
+            key: 'idle_down',
+            frames: this.anims.generateFrameNames('playerAtlas', {
+                prefix: 'idle_down_',
+                start: 1,
+                end: 3,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 5,
+            repeat: -1,
+            repeatDelay: 2500,
+            yoyo: true
+        });
+        // Idle up
+        this.anims.create({
+            key: 'idle_up',
+            frames: this.anims.generateFrameNames('playerAtlas', {
+                prefix: 'idle_up_',
+                start: 1,
+                end: 3,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 5,
+            repeat: -1,
+            repeatDelay: 2500,
+            yoyo: true
+        });
+        // Run left
+        this.anims.create({
+            key: 'run_left',
+            frames: this.anims.generateFrameNames('playerAtlas', {
+                prefix: 'run_left_',
+                start: 1,
+                end: 10,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 30,
+            repeat: -1,
+        });
+        // Run right
+        this.anims.create({
+            key: 'run_right',
+            frames: this.anims.generateFrameNames('playerAtlas', {
+                prefix: 'run_right_',
+                start: 1,
+                end: 10,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 30,
+            repeat: -1,
+        });
+        // Run down
+        this.anims.create({
+            key: 'run_down',
+            frames: this.anims.generateFrameNames('playerAtlas', {
+                prefix: 'run_down_',
+                start: 1,
+                end: 10,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 30,
+            repeat: -1,
+        });
+        // Run up
+        this.anims.create({
+            key: 'run_up',
+            frames: this.anims.generateFrameNames('playerAtlas', {
+                prefix: 'run_up_',
+                start: 1,
+                end: 10,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 30,
+            repeat: -1,
+        });
         
         //create game objects
         this.background = this.add.image(game.config.width / 2, game.config.height / 2, 'background')
-        this.player = new Player(this, 100, 100, 'player').setOrigin(.5, 0);
-        this.object1 = new Interactable(this, 200, 200, 'object1', 0, "vase").setOrigin(.5, 0);
+        this.player = new Player(this, 100, 100, 'playerAtlas').setOrigin(.5, 0); 
+        this.object1 = new Interactable(this, game.config.width / 2, game.config.height / 2, 'metalFile', 0, "vase").setScale(.15);
 
         // Use Phaser-provided cursor key creation function
         cursors = this.input.keyboard.createCursorKeys();
@@ -44,18 +159,14 @@ class Play extends Phaser.Scene {
                     this.objName = _object1.objectName;
                     self.add.text(50,50, "Interact with " + this.objName +"?");
 
-                    self.inputHandler();
+                    //self.inputHandler();
                 }
             }
         )
-        
-
     }
 
     update() {
-        this.player.update(cursors);
-        
-        
+        this.player.update();
     }
 
     inputHandler(){
