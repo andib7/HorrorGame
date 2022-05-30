@@ -6,14 +6,13 @@ class Play extends Phaser.Scene {
     preload() {
         // load images/tile sprites
         this.load.atlas('playerAtlas', './assets/sprites/120_textureatlas.png', './assets/sprites/120map.json');
-        this.load.image('background', './assets/background/background.png');
-        this.load.image('background2', './assets/background/background2.jpg');
+        this.load.image('background', './assets/background/new_background.png');
         this.load.image('bookshelf', './assets/sprites/bookshelf.PNG');
         this.load.image('bed', './assets/sprites/bed.png');
         this.load.image('drawer', './assets/sprites/drawer.png');
         this.load.image('door', './assets/sprites/door.png');
         this.load.image('trapdoor', './assets/sprites/trapdoor.png');
-        this.load.image('trapdooropen', './assets/sprites/trapdooropen.png');
+        this.load.image('trapdooropen', './assets/sprites/open_trapdoor.png');
         this.load.image('metalfile', './assets/sprites/metalfile.png');
         this.load.image('metalbar', './assets/sprites/metalbar.png');
         this.load.image('net', './assets/sprites/net.png');
@@ -154,11 +153,11 @@ class Play extends Phaser.Scene {
 
         this.player = new Player(this, game.config.width / 2, game.config.height / 2, 'playerAtlas').setOrigin(.5, 0); 
 
-        this.bookshelf = new Interactable(this, 380, 220, 'bookshelf', 0, "Bookcase").setScale(.8);
-        this.drawer = new Interactable(this, 890, 210, 'drawer', 0, "Drawer").setScale(.8);
-        this.bed = new Interactable(this, 1050, 720, 'bed', 0, "Bed").setScale(.8);
-        this.trapDoor = new Interactable(this, 150, 415, 'trapdoor', 0, "Trap Door").setScale(.8);
-        this.door = new Interactable(this, 1165, 215, 'door', 0, "Door").setScale(.8);
+        this.bookshelf = new Interactable(this, 380, 220, 'bookshelf', 0, "Bookcase").setScale(.4);
+        this.drawer = new Interactable(this, 890, 210, 'drawer', 0, "Drawer").setScale(.4);
+        this.bed = new Interactable(this, 1050, 720, 'bed', 0, "Bed").setScale(.4);
+        this.trapDoor = new Interactable(this, 150, 415, 'trapdoor', 0, "Trap Door").setScale(.4);
+        this.door = new Interactable(this, 1165, 215, 'door', 0, "Door").setScale(.4);
         
         this.metalFile = new Collectable(this, 400, 900, 'metalfile').setScale(.1);
         this.metalBar = new Collectable(this, 500, 900, 'metalbar').setScale(.1);
@@ -166,8 +165,10 @@ class Play extends Phaser.Scene {
         this.key = new Collectable(this, 700, 900, 'key').setScale(.1);
 
         var self = this; //for some reason this is the only way I can actually display text
-        var currentText = self.add.text(50, 50, "NULL text");
-        currentText.setVisible(false);
+        this.currentText = self.add.text(50, 50, "NULL text");
+        this.currentText.setVisible(false);
+        this.interactBool = false;
+        this.userInp = false;
         // Use Phaser-provided cursor key creation function
         cursors = this.input.keyboard.createCursorKeys();
         
@@ -178,13 +179,18 @@ class Play extends Phaser.Scene {
             function (_player, _object) {
                 if(_player.body.touching && _object.body.touching){
                     //self.add.text(50, 50, "Interact with " + _object1.objectName +"?");
-                    this.userInp = window.prompt("Interact with bookshelf? (y or n)");
-                    if(this.userInp == "y" && self.metalFile.found == true){
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You look through the books and find nothing more");
+                    //this.userInp = window.prompt("Interact with bookshelf? (y or n)");
+
+                    self.currentText.setVisible(false);
+                    self.currentText = self.add.text(50, 50, "Interact with " + _object.objectName +"? ");
+                    self.interactBool = true;
+                    
+                    if(self.userInp == true && self.metalFile.found == true){
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You look through the books and find nothing more");
                     } else if(this.userInp == "y"){
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You look through the books and find a metal file");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You look through the books and find a metal file");
                         self.sound.play('sfx_pickup');
                         self.metalFile.getItem();
                     }
@@ -198,11 +204,11 @@ class Play extends Phaser.Scene {
                 if (_player.body.touching && _object.body.touching) {
                     this.userInp = window.prompt("Interact with drawer? (y or n)");
                     if (this.userInp == "y" && self.net.found == true) {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You look through the drawer and find nothing more");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You look through the drawer and find nothing more");
                     } else if (this.userInp == "y") {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You look through the drawer and find a net");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You look through the drawer and find a net");
                         self.sound.play('sfx_pickup');
                         self.net.getItem();
                     }
@@ -216,11 +222,11 @@ class Play extends Phaser.Scene {
                 if (_player.body.touching && _object.body.touching) {
                     this.userInp = window.prompt("Interact with bed? (y or n)");
                     if (this.userInp == "y" && self.metalBar.found == true || this.userInp == "y" && self.metalFile.found == false) {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You find nothing on the bed");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You find nothing on the bed");
                     } else if (this.userInp == "y" && self.metalFile.found == true) {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You use the metal file to saw off a metal bar from the bed");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You use the metal file to saw off a metal bar from the bed");
                         self.sound.play('sfx_pickup');
                         self.metalBar.getItem();
                     }
@@ -237,24 +243,24 @@ class Play extends Phaser.Scene {
                     this.userInp = window.prompt("Interact with trap door? (y or n)");
                     self.player.x++;
                     if (this.userInp == "y" && self.key.found == true && self.trapdoorOpen == true) {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You use the net in the trap door and find nothing more");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You use the net in the trap door and find nothing more");
                     } else if (this.userInp == "y" && self.metalBar.found == false && self.trapdoorOpen == false) {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You try to open the trap door but it is too hard to open");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You try to open the trap door but it is too hard to open");
                     } else if (this.userInp == "y" && self.metalBar.found == true && self.trapdoorOpen == false) {
                         _object.setTexture('trapdooropen');
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You pry open the trap door with the metal bar");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You pry open the trap door with the metal bar");
                         self.trapdoorOpen = true;
                     } else if (this.userInp == "y" && self.net.found == true && self.trapdoorOpen == true) {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You use the net in the trap door and find a rusted key");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You use the net in the trap door and find a rusted key");
                         self.sound.play('sfx_pickup');
                         self.key.getItem();
                     } else if (this.userInp == "y" && self.net.found == false && self.trapdoorOpen == true) {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You try to reach into the trap door but you fall in and die");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You try to reach into the trap door but you fall in and die");
                     } 
                 }
             }
@@ -267,15 +273,15 @@ class Play extends Phaser.Scene {
                     //self.add.text(50, 50, "Interact with " + _object1.objectName +"?");
                     this.userInp = window.prompt("Interact with door? (y or n)");
                     if (this.userInp == "y" && self.metalBar.found == false) {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You try to open the door but it won't budge");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You try to open the door but it won't budge");
                     } else if (this.userInp == "y" && self.metalBar.found == true && self.key.found == false) {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You try to pry open the door but you make too much sound so you get killed");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You try to pry open the door but you make too much sound so you get killed");
                     }
                     else if (this.userInp == "y" && self.key.found == true) {
-                        currentText.setVisible(false);
-                        currentText = self.add.text(50, 50, "You use the key to open the door and finally escape!");
+                        self.currentText.setVisible(false);
+                        self.currentText = self.add.text(50, 50, "You use the key to open the door and finally escape!");
                     }
                 }
             }
@@ -283,7 +289,32 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        this.currentText.setVisible(false);
         this.player.update();
+        this.add.text(200, 200, !this.userInp);
+        if (cursors.space.isDown) {
+            //this.currentText.setVisible(false);
+            if(!this.interactBool){
+                this.currentText = this.add.text(100, 100, "nothing to interact with");
+            }
+            else{
+                this.currentText = this.add.text(150, 150, "this worked space");
+                this.userInp = true;
+                this.interactBool = false;
+            }
+            
+        }
+        else if (cursors.shift.isDown && this.interactBool == true) {
+            this.currentText.setVisible(false);
+            if(!this.interactBool){
+                this.currentText = this.add.text(100, 100, "nothing to interact with");
+            }
+            else{
+                this.currentText = this.add.text(100, 100, "this worked shift");
+                this.userInp = "n";
+                this.interactBool = false;
+            }
+        }
     }
 
 }
