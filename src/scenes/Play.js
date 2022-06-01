@@ -268,13 +268,13 @@ class Play extends Phaser.Scene {
                     if(this.metalFile.found){ //when already found
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You look through the books and find nothing more", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You look through the books and find nothing more.", this.textConfig);
                         this.collisionItem == "none";
                         this.interactBool = false;ss
                     } else {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You look through the books and find a metal file", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You look through the books and find a metal file.", this.textConfig);
                         this.sound.play('sfx_pickup');
                         this.metalFile.getItem();
                         this.collisionItem == "none";
@@ -285,13 +285,13 @@ class Play extends Phaser.Scene {
                     if (this.net.found) {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You look through the drawer and find nothing more", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You look through the drawer and find nothing more.", this.textConfig);
                         this.collisionItem == "none";
                         this.interactBool = false;
                     } else {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You look through the drawer and find a net", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You look through the drawer and find a net.", this.textConfig);
                         this.sound.play('sfx_pickup');
                         this.net.getItem();
                         this.collisionItem == "none";
@@ -302,13 +302,13 @@ class Play extends Phaser.Scene {
                     if (this.metalBar.found || !this.metalFile.found) {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You find nothing on the bed", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You find nothing on the bed.", this.textConfig);
                         this.collisionItem == "none";
                         this.interactBool = false;
                     } else {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You use the metal file to saw off a metal bar from the bed", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You use the metal file to saw off a metal bar from the bed.", this.textConfig);
                         this.sound.play('sfx_pickup');
                         this.metalBar.getItem();
                         this.collisionItem == "none";
@@ -325,7 +325,7 @@ class Play extends Phaser.Scene {
                     } else if (!this.metalBar.found && !this.trapdoorOpen) {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to open the trap door but it is too hard to open", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to open the trap door but it is too hard to open.", this.textConfig);
                         this.collisionItem == "none";
                         this.interactBool = false;
                     } else if (this.metalBar.found && !this.trapdoorOpen) {
@@ -333,7 +333,7 @@ class Play extends Phaser.Scene {
                         this.trapDoorImage = this.add.image(170, 460, 'trapdooropen').setScale(.3);
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You pry open the trap door with the metal bar", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You pry open the trap door with the metal bar.", this.textConfig);
                         this.sound.play('sfx_open');
                         this.trapdoorOpen = true;
                         this.collisionItem == "none";
@@ -341,7 +341,7 @@ class Play extends Phaser.Scene {
                     } else if (this.net.found && this.trapdoorOpen ) {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You use the net in the trap door and find a rusted key", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You use the net in the trap door and find a rusted key.", this.textConfig);
                         this.sound.play('sfx_pickup');
                         this.key.getItem();
                         this.collisionItem == "none";
@@ -349,7 +349,7 @@ class Play extends Phaser.Scene {
                     } else if (!this.net.found && this.trapdoorOpen) {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to reach into the trap door but you fall in and die", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to reach into the trap door but you fall in and die.", this.textConfig);
                         this.collisionItem == "none";
                         this.replayCondition = true;
                     } 
@@ -358,13 +358,13 @@ class Play extends Phaser.Scene {
                     if (!this.metalBar.found) {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to open the door but it won't budge", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to open the door but it won't budge.", this.textConfig);
                         this.collisionItem == "none";
                         this.interactBool = false;
                     } else if (this.metalBar.found && !this.key.found ) {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to pry open the door but you make too much sound", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to pry open the door but you make too much sound. Your kidnapper heard you...", this.textConfig);
                         this.collisionItem == "none";
                         this.replayCondition = true;
                     }
@@ -390,5 +390,4 @@ class Play extends Phaser.Scene {
             }
         }
     }
-
 }
