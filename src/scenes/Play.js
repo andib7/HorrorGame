@@ -151,13 +151,22 @@ class Play extends Phaser.Scene {
         //create game objects
         this.background = this.add.image(game.config.width / 2, game.config.height / 2, 'background');
 
-        this.player = new Player(this, game.config.width / 2, game.config.height / 2, 'playerAtlas').setOrigin(.5, 0); 
+        
 
-        this.bookshelf = new Interactable(this, 380, 220, 'bookshelf', 0, "Bookcase").setScale(.4);
-        this.drawer = new Interactable(this, 890, 210, 'drawer', 0, "Drawer").setScale(.4);
-        this.bed = new Interactable(this, 1050, 720, 'bed', 0, "Bed").setScale(.4);
-        this.trapDoor = new Interactable(this, 150, 415, 'trapdoor', 0, "Trap Door").setScale(.4);
-        this.door = new Interactable(this, 1165, 215, 'door', 0, "Door").setScale(.4);
+        this.bookshelf = new Interactable(this, 470, 150, 'bookshelf', 0, "Bookcase").setScale(.3);
+        this.drawer = new Interactable(this, 840, 160, 'drawer', 0, "Drawer").setScale(.3);
+        
+        this.trapDoor = new Interactable(this, 190, 500, 'trapdoor', 0, "Trap Door").setScale(.2); 
+        this.trapDoor.setVisible(false);
+        this.trapDoorImage = this.add.image(190, 500, 'trapdoor').setScale(.3);
+        this.door = new Interactable(this, 1100, 170, 'door', 0, "Door").setScale(.1);
+        this.door.setVisible(false);
+        this.doorImage = this.add.image(1165, 197, 'door').setScale(.23);
+        this.doorImage.rotation = .07;
+        this.player = new Player(this, game.config.width / 2, game.config.height / 2, 'playerAtlas').setOrigin(.5, 0); //player moved to this layer for better visuals when colliding
+        this.bed = new Interactable(this, 1050, 700, 'bed', 0, "Bed").setScale(.2);
+        this.bed.setVisible(false);
+        this.bedImage = this.add.image(1050, 680, 'bed').setScale(.4); //since collisions were off we added an image to be in place for the object
         
         this.metalFile = new Collectable(this, 400, 900, 'metalfile').setScale(.1);
         this.metalBar = new Collectable(this, 500, 900, 'metalbar').setScale(.1);
@@ -167,8 +176,10 @@ class Play extends Phaser.Scene {
         var self = this; //for some reason this is the only way I can actually display text
         this.currentText = self.add.text(50, 50, "NULL text");
         this.currentText.setVisible(false);
+        this.trapdoorOpen = false;
         this.interactBool = false;
-        this.userInp = false;
+        this.collisionItem = "none";
+        
         // Use Phaser-provided cursor key creation function
         cursors = this.input.keyboard.createCursorKeys();
         
@@ -178,22 +189,10 @@ class Play extends Phaser.Scene {
             this.bookshelf,
             function (_player, _object) {
                 if(_player.body.touching && _object.body.touching){
-                    //self.add.text(50, 50, "Interact with " + _object1.objectName +"?");
-                    //this.userInp = window.prompt("Interact with bookshelf? (y or n)");
-
+                    self.collisionItem = "bookshelf";
                     self.currentText.setVisible(false);
                     self.currentText = self.add.text(50, 50, "Interact with " + _object.objectName +"? ");
                     self.interactBool = true;
-                    
-                    if(self.userInp == true && self.metalFile.found == true){
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You look through the books and find nothing more");
-                    } else if(this.userInp == "y"){
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You look through the books and find a metal file");
-                        self.sound.play('sfx_pickup');
-                        self.metalFile.getItem();
-                    }
                 }
             }
         )
@@ -202,16 +201,10 @@ class Play extends Phaser.Scene {
             this.drawer,
             function (_player, _object) {
                 if (_player.body.touching && _object.body.touching) {
-                    this.userInp = window.prompt("Interact with drawer? (y or n)");
-                    if (this.userInp == "y" && self.net.found == true) {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You look through the drawer and find nothing more");
-                    } else if (this.userInp == "y") {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You look through the drawer and find a net");
-                        self.sound.play('sfx_pickup');
-                        self.net.getItem();
-                    }
+                    self.collisionItem = "drawer";
+                    self.currentText.setVisible(false);
+                    self.currentText = self.add.text(50, 50, "Interact with " + _object.objectName +"? ");
+                    self.interactBool = true;
                 }
             }
         )
@@ -220,100 +213,146 @@ class Play extends Phaser.Scene {
             this.bed,
             function (_player, _object) {
                 if (_player.body.touching && _object.body.touching) {
-                    this.userInp = window.prompt("Interact with bed? (y or n)");
-                    if (this.userInp == "y" && self.metalBar.found == true || this.userInp == "y" && self.metalFile.found == false) {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You find nothing on the bed");
-                    } else if (this.userInp == "y" && self.metalFile.found == true) {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You use the metal file to saw off a metal bar from the bed");
-                        self.sound.play('sfx_pickup');
-                        self.metalBar.getItem();
-                    }
+                    self.collisionItem = "bed";
+                    self.currentText.setVisible(false);
+                    self.currentText = self.add.text(50, 50, "Interact with " + _object.objectName +"? ");
+                    self.interactBool = true;
                 }
             }
         )
-        this.trapdoorOpen = false;
         this.physics.add.collider(
             this.player,
             this.trapDoor,
             function (_player, _object) {
                 if (_player.body.touching && _object.body.touching) {
-                    //self.add.text(50, 50, "Interact with " + _object1.objectName +"?");
-                    this.userInp = window.prompt("Interact with trap door? (y or n)");
-                    self.player.x++;
-                    if (this.userInp == "y" && self.key.found == true && self.trapdoorOpen == true) {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You use the net in the trap door and find nothing more");
-                    } else if (this.userInp == "y" && self.metalBar.found == false && self.trapdoorOpen == false) {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You try to open the trap door but it is too hard to open");
-                    } else if (this.userInp == "y" && self.metalBar.found == true && self.trapdoorOpen == false) {
-                        _object.setTexture('trapdooropen');
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You pry open the trap door with the metal bar");
-                        self.trapdoorOpen = true;
-                    } else if (this.userInp == "y" && self.net.found == true && self.trapdoorOpen == true) {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You use the net in the trap door and find a rusted key");
-                        self.sound.play('sfx_pickup');
-                        self.key.getItem();
-                    } else if (this.userInp == "y" && self.net.found == false && self.trapdoorOpen == true) {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You try to reach into the trap door but you fall in and die");
-                    } 
+                    self.collisionItem = "trapdoor";
+                    self.currentText.setVisible(false);
+                    self.currentText = self.add.text(50, 50, "Interact with " + _object.objectName +"? ");
+                    self.interactBool = true;
                 }
             }
         )
         this.physics.add.collider(
             this.player,
             this.door,
-            function (_player, _object1) {
-                if (_player.body.touching && _object1.body.touching) {
-                    //self.add.text(50, 50, "Interact with " + _object1.objectName +"?");
-                    this.userInp = window.prompt("Interact with door? (y or n)");
-                    if (this.userInp == "y" && self.metalBar.found == false) {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You try to open the door but it won't budge");
-                    } else if (this.userInp == "y" && self.metalBar.found == true && self.key.found == false) {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You try to pry open the door but you make too much sound so you get killed");
-                    }
-                    else if (this.userInp == "y" && self.key.found == true) {
-                        self.currentText.setVisible(false);
-                        self.currentText = self.add.text(50, 50, "You use the key to open the door and finally escape!");
-                    }
+            function (_player, _object) {
+                if (_player.body.touching && _object.body.touching) {
+                    self.collisionItem = "door";
+                    self.currentText.setVisible(false);
+                    self.currentText = self.add.text(50, 50, "Interact with " + _object.objectName +"? ");
+                    self.interactBool = true;
                 }
             }
         )
     }
 
-    update() {
-        this.currentText.setVisible(false);
+    update() { 
         this.player.update();
-        this.add.text(200, 200, !this.userInp);
         if (cursors.space.isDown) {
-            //this.currentText.setVisible(false);
-            if(!this.interactBool){
-                this.currentText = this.add.text(100, 100, "nothing to interact with");
+            if(this.interactBool){
+                if(this.collisionItem == "bookshelf"){
+                    if(this.metalFile.found){ //when already found
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You look through the books and find nothing more");
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    } else {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You look through the books and find a metal file");
+                        this.sound.play('sfx_pickup');
+                        this.metalFile.getItem();
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    }
+                }
+                else if(this.collisionItem == "drawer"){
+                    if (this.net.found) {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You look through the drawer and find nothing more");
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    } else {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You look through the drawer and find a net");
+                        this.sound.play('sfx_pickup');
+                        this.net.getItem();
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    }
+                }
+                else if(this.collisionItem == "bed"){
+                    if (this.metalBar.found || !this.metalFile.found) {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You find nothing on the bed");
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    } else {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You use the metal file to saw off a metal bar from the bed");
+                        this.sound.play('sfx_pickup');
+                        this.metalBar.getItem();
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    }
+                }
+                else if(this.collisionItem == "trapdoor"){
+                    if (this.key.found && this.trapdoorOpen) {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You use the net in the trap door and find nothing more");
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    } else if (!this.metalBar.found && !this.trapdoorOpen) {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You try to open the trap door but it is too hard to open");
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    } else if (this.metalBar.found && !this.trapdoorOpen) {
+                        this.trapDoorImage.setVisible(false);
+                        this.trapDoorImage = this.add.image(170, 460, 'trapdooropen').setScale(.3);
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You pry open the trap door with the metal bar");
+                        this.trapdoorOpen = true;
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    } else if (this.net.found && this.trapdoorOpen ) {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You use the net in the trap door and find a rusted key");
+                        this.sound.play('sfx_pickup');
+                        this.key.getItem();
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    } else if (!this.net.found && this.trapdoorOpen) {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You try to reach into the trap door but you fall in and die");
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    } 
+                }
+                else if(this.collisionItem == "door"){
+                    if (!this.metalBar.found) {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You try to open the door but it won't budge");
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    } else if (this.metalBar.found && !this.key.found ) {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You try to pry open the door but you make too much sound so you get killed");
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    }
+                    else if (this.key.found) {
+                        this.currentText.setVisible(false);
+                        this.currentText = this.add.text(50, 50, "You use the key to open the door and finally escape!");
+                        this.collisionItem == "none";
+                        this.interactBool = false;
+                    }
+                }
             }
-            else{
-                this.currentText = this.add.text(150, 150, "this worked space");
-                this.userInp = true;
-                this.interactBool = false;
-            }
-            
         }
-        else if (cursors.shift.isDown && this.interactBool == true) {
+        else if (cursors.shift.isDown) {
             this.currentText.setVisible(false);
-            if(!this.interactBool){
-                this.currentText = this.add.text(100, 100, "nothing to interact with");
-            }
-            else{
-                this.currentText = this.add.text(100, 100, "this worked shift");
-                this.userInp = "n";
-                this.interactBool = false;
-            }
+            this.collisionItem == "none";
+            this.interactBool = false;
         }
     }
 

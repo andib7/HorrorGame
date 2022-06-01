@@ -4,11 +4,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this); //add to scene
         this.setCollideWorldBounds(true);
-        this.VELOCITY = 150;
-    }
-
-    create(){
-        
+        this.VELOCITY = 300;
     }
     
     update() {
@@ -26,7 +22,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.anims.play('run_down', true);
         } else if (!cursors.right.isDown && !cursors.left.isDown && !cursors.down.isDown && !cursors.up.isDown) {
             this.body.setVelocity(0,0);
-            // add code for idle animation play here:
             if (this.anims.isPlaying && this.anims.currentAnim.key === 'run_left') {
                 this.anims.play('idle_left');
             }

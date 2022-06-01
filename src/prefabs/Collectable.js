@@ -6,10 +6,6 @@ class Collectable extends Phaser.GameObjects.Sprite {
         this.found = false;
     }
 
-    update() {
-        
-    }
-
     getItem(){
         this.setVisible(true);
         this.found = true; 

@@ -6,12 +6,4 @@ class Interactable extends Phaser.Physics.Arcade.Sprite {
         this.setImmovable(true);
         this.objectName = name;
     }
-
-    update(){
-        
-    }
-
-    addText(scene){
-        statement = scene.add.text(50, 50, "Interact with ");
-    }
 }
