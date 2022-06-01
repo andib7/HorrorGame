@@ -6,6 +6,8 @@ class Menu extends Phaser.Scene {
     preload() {
         this.load.image('main', './assets/background/mainscreen_120final.jpg');
         this.load.audio('sfx_pickup', './assets/audio/itempickup.wav');
+        this.load.audio('sfx_open', './assets/audio/dooropen.wav');
+        this.load.audio('sfx_win', './assets/audio/escape.wav');
     }
 
     create() {

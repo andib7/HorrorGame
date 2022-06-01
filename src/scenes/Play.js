@@ -18,7 +18,8 @@ class Play extends Phaser.Scene {
         this.load.image('net', './assets/sprites/net.png');
         this.load.image('key', './assets/sprites/key.png');
         this.load.image('textbox', './assets/background/textbox.png');
-        //this.load.image()
+        this.load.image('good', './assets/background/goodend.png')
+        this.load.image('bad', './assets/background/badend.png')
     }
 
     create() {
@@ -179,6 +180,7 @@ class Play extends Phaser.Scene {
         this.trapdoorOpen = false;
         this.interactBool = false;
         this.collisionItem = "none";
+        this.replayCondition = false;
         
         // Use Phaser-provided cursor key creation function
         cursors = this.input.keyboard.createCursorKeys();
@@ -252,7 +254,14 @@ class Play extends Phaser.Scene {
     }
 
     update() { 
-        this.player.update();
+        if(!this.replayCondition){
+            this.player.update();
+        }
+        if(this.replayCondition){
+            if(cursors.space.isPressed){
+                this.scene.restart();
+            }
+        }
         if (cursors.space.isDown) {
             if(this.interactBool){
                 if(this.collisionItem == "bookshelf"){
@@ -261,7 +270,7 @@ class Play extends Phaser.Scene {
                         this.textbox.setVisible(true);
                         this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You look through the books and find nothing more", this.textConfig);
                         this.collisionItem == "none";
-                        this.interactBool = false;
+                        this.interactBool = false;ss
                     } else {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
@@ -325,6 +334,7 @@ class Play extends Phaser.Scene {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
                         this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You pry open the trap door with the metal bar", this.textConfig);
+                        this.sound.play('sfx_open');
                         this.trapdoorOpen = true;
                         this.collisionItem == "none";
                         this.interactBool = false;
@@ -341,7 +351,7 @@ class Play extends Phaser.Scene {
                         this.textbox.setVisible(true);
                         this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to reach into the trap door but you fall in and die", this.textConfig);
                         this.collisionItem == "none";
-                        this.interactBool = false;
+                        this.replayCondition = true;
                     } 
                 }
                 else if(this.collisionItem == "door"){
@@ -356,15 +366,16 @@ class Play extends Phaser.Scene {
                         this.textbox.setVisible(true);
                         this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to pry open the door but you make too much sound", this.textConfig);
                         this.collisionItem == "none";
-                        this.interactBool = false;
+                        this.replayCondition = true;
                     }
                     else if (this.key.found) {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
                         this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You use the key to open the door and finally escape!", this.textConfig);
-
+                        this.sound.play('sfx_win');
+                        this.add.image(game.config.width / 2, game.config.height / 2, 'good');
                         this.collisionItem == "none";
-                        this.interactBool = false;
+                        this.replayCondition = true;
                     }
                 }
             }
@@ -374,6 +385,9 @@ class Play extends Phaser.Scene {
             this.currentText.setVisible(false);
             this.collisionItem == "none";
             this.interactBool = false;
+            if(this.replayCondition){
+                this.scene.restart();
+            }
         }
     }
 
