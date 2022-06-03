@@ -8,6 +8,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_pickup', './assets/audio/itempickup.wav');
         this.load.audio('sfx_open', './assets/audio/dooropen.wav');
         this.load.audio('sfx_win', './assets/audio/escape.wav');
+        this.load.audio('sfx_page', './assets/audio/page.wav');
     }
 
     create() {
@@ -18,6 +19,7 @@ class Menu extends Phaser.Scene {
 
     update() {  
         if (cursors.space.isDown) {
+            this.sound.play('sfx_page');
             this.scene.start('playScene'); 
         }
     }

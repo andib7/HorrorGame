@@ -364,7 +364,8 @@ class Play extends Phaser.Scene {
                     } else if (this.metalBar.found && !this.key.found ) {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
-                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to pry open the door but you make too much sound. Your kidnapper heard you...", this.textConfig);
+                        this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 230, "You try to pry open the door but you make too much sound. Your kidnapper hears you...", this.textConfig);
+                        this.add.image(game.config.width / 2, game.config.height / 2, 'bad');
                         this.collisionItem == "none";
                         this.replayCondition = true;
                     }
