@@ -394,8 +394,8 @@ class Play extends Phaser.Scene {
             this.currentText.setVisible(false);
             this.collisionItem == "none";
             this.interactBool = false;
-            this.music.stop();
             if(this.replayCondition){
+                this.music.stop();
                 this.scene.restart();
             }
         }
