@@ -164,7 +164,6 @@ class Play extends Phaser.Scene {
         this.doorImage = this.add.image(1165, 197, 'door').setScale(.23);
         this.doorImage.rotation = .07;
         this.player = new Player(this, game.config.width / 2, game.config.height / 2, 'playerAtlas').setOrigin(.5, 0); //player moved to this layer for better visuals when colliding
-        //this.player.create();
         this.bed = new Interactable(this, 1050, 700, 'bed', 0, "Bed").setScale(.2);
         this.bed.setVisible(false);
         this.bedImage = this.add.image(1050, 680, 'bed').setScale(.4); //since collisions were off we added an image to be in place for the object
@@ -274,7 +273,7 @@ class Play extends Phaser.Scene {
                         this.textbox.setVisible(true);
                         this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 240, "You look through the books and find nothing more.", this.textConfig);
                         this.collisionItem == "none";
-                        this.interactBool = false;ss
+                        this.interactBool = false;
                     } else {
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
