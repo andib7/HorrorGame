@@ -377,7 +377,8 @@ class Play extends Phaser.Scene {
                         this.collisionItem == "none";
                         this.replayCondition = true;
                     }
-                    else if (this.key.found) {
+                    else if (this.key.found && this.playOnce) {
+                        this.playOnce = false;
                         this.currentText.setVisible(false);
                         this.textbox.setVisible(true);
                         this.currentText = this.add.text(game.config.width / 3 - 30, game.config.height - 240, "You use the key to open the door and finally escape!", this.textConfig);
